@@ -9,26 +9,26 @@ import UIKit
 import SystemConfiguration
 import AVFoundation
 
-var maximumComicNumber = 0
-var counter = maximumComicNumber
-var URLtoRequestDataFrom = ""
-var comicTitle = ""
-var imageURL: String = ""
-var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
-var shouldPlaySound = true
-var sound : AVAudioPlayer?
+private var maximumComicNumber = 0
+private var counter = maximumComicNumber
+private var URLtoRequestDataFrom = ""
+private var comicTitle = ""
+private var imageURL: String = ""
+private var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
+private var shouldPlaySound = true
+private var sound : AVAudioPlayer?
 
 class ViewController: UIViewController, UITextFieldDelegate {
     
-    
-    @IBOutlet weak var comicNumTextBox: UITextField!
-    @IBOutlet weak var comicNumLabel: UILabel!
-    @IBOutlet weak var comicTitleLabel: UILabel!
-    @IBOutlet weak var comicDateLabel: UILabel!
-    @IBOutlet weak var comicImage: UIImageView!
+    @IBOutlet private weak var comicNumTextBox: UITextField!
+    @IBOutlet private weak var comicNumLabel: UILabel!
+    @IBOutlet private weak var comicTitleLabel: UILabel!
+    @IBOutlet private weak var comicDateLabel: UILabel!
+    @IBOutlet private weak var comicImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.comicNumTextBox.delegate = self
         let initialURL = "http://xkcd.com/info.0.json";
         if isConnected() == true {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
@@ -128,7 +128,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func previousPressed(sender: AnyObject) {
+    @IBAction private func previousPressed(sender: AnyObject) {
         if isConnected() == true {
             if counter >= 2 && counter <= maximumComicNumber {
                 counter--
@@ -146,7 +146,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func randomPressed(sender: AnyObject) {
+    @IBAction private func randomPressed(sender: AnyObject) {
         if isConnected() == true {
             let randomNum = randomInt(1, max: maximumComicNumber)
             counter = randomNum
@@ -161,7 +161,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func nextPressed(sender: AnyObject) {
+    @IBAction private func nextPressed(sender: AnyObject) {
         if isConnected() == true {
             if counter >= 1 && counter <= maximumComicNumber - 1 {
                 counter++
@@ -179,7 +179,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func savePressed(sender: AnyObject) {
+    @IBAction private func savePressed(sender: AnyObject) {
         var comicImg: UIImage?
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             if let url = NSURL(string: imageURL) {
@@ -196,7 +196,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction func audioToggled(sender: AnyObject) {
+    @IBAction private func audioToggled(sender: AnyObject) {
         shouldPlaySound = !shouldPlaySound
         let alert = UIAlertController(title: "Audio toggled", message: "", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default, handler: { alertAction in }))
@@ -204,7 +204,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func getSpecificComicPressed(sender: AnyObject) {
+    @IBAction private func getSpecificComicPressed(sender: AnyObject) {
         let textBoxText: String = comicNumTextBox.text!
         let textBoxAsInt = Int(textBoxText)
         

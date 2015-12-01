@@ -17,6 +17,7 @@ private var imageURL = ""
 private var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
 private var shouldPlaySound = true
 private var soundEffect: AVAudioPlayer!
+private var firstQueryPerformed = false
 
 final class ViewController: UIViewController, UITextFieldDelegate {
     
@@ -25,6 +26,12 @@ final class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private weak var comicTitleLabel: UILabel!
     @IBOutlet private weak var comicDateLabel: UILabel!
     @IBOutlet private weak var comicImage: UIImageView!
+    @IBOutlet private weak var leftArrow: UIButton!
+    @IBOutlet private weak var randomButton: UIButton!
+    @IBOutlet private weak var rightArrow: UIButton!
+    @IBOutlet private weak var saveButton: UIButton!
+    @IBOutlet private weak var getComicNumButton: UIButton!
+    @IBOutlet private weak var audioButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,19 +41,27 @@ final class ViewController: UIViewController, UITextFieldDelegate {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 if let json = self.urlStringToJSON(initialURL) as? [String:AnyObject] {
                     dictOfCurrentComicInfo = json
-                    if let comicNum = json["num"] as? Int {
-                        maximumComicNumber = comicNum
+                    dispatch_async(dispatch_get_main_queue()) {
+                        if let num = dictOfCurrentComicInfo["num"] as? Int {
+                            maximumComicNumber = num
+                        }
+                        self.displayNum()
+                        self.displayTitle()
+                        self.displayImage()
+                        self.displayDate()
+                        firstQueryPerformed = true
                     }
-                }
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.displayNum()
-                    self.displayTitle()
-                    self.displayImage()
-                    self.displayDate()
                 }
             }
         } else {
-            notConnected()
+           comicImage.image = UIImage(named: "noconnection.png")
+           leftArrow.userInteractionEnabled = false
+           randomButton.userInteractionEnabled = false
+           rightArrow.userInteractionEnabled = false
+           saveButton.userInteractionEnabled = false
+           getComicNumButton.userInteractionEnabled = false
+           audioButton.userInteractionEnabled = false
+           comicNumTextBox.userInteractionEnabled = false
         }
     }
     
@@ -68,13 +83,12 @@ final class ViewController: UIViewController, UITextFieldDelegate {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 if let json = self.urlStringToJSON(URLtoRequestDataFrom) as? [String:AnyObject] {
                     dictOfCurrentComicInfo = json
-                }
-            
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.displayNum()
-                    self.displayTitle()
-                    self.displayImage()
-                    self.displayDate()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.displayNum()
+                        self.displayTitle()
+                        self.displayImage()
+                        self.displayDate()
+                    }
                 }
             }
         } else {
@@ -127,11 +141,14 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         comicDateLabel.text = month + "/" + day + "/" + year
     }
     
-    
     @IBAction private func previousPressed(sender: AnyObject) {
         if isConnected() == true {
             if counter >= 2 && counter <= maximumComicNumber {
                 counter--
+                if counter == 404 {
+                    do404SpecificWork()
+                    return;
+                }
                 URLtoRequestDataFrom = "http://xkcd.com/" + counter.description + "/info.0.json"
                 if shouldPlaySound == true {
                     playSound()
@@ -145,11 +162,14 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
     @IBAction private func randomPressed(sender: AnyObject) {
         if isConnected() == true {
             let randomNum = randomInt(1, max: maximumComicNumber)
             counter = randomNum
+            if counter == 404 {
+                do404SpecificWork()
+                return;
+            }
             URLtoRequestDataFrom = "http://xkcd.com/" + counter.description + "/info.0.json"
             if shouldPlaySound == true {
                 playSound()
@@ -160,11 +180,14 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
     @IBAction private func nextPressed(sender: AnyObject) {
         if isConnected() == true {
             if counter >= 1 && counter <= maximumComicNumber - 1 {
                 counter++
+                if counter == 404 {
+                    do404SpecificWork()
+                    return;
+                }
                 URLtoRequestDataFrom = "http://xkcd.com/" + counter.description + "/info.0.json"
                 if shouldPlaySound == true {
                     playSound()
@@ -177,7 +200,14 @@ final class ViewController: UIViewController, UITextFieldDelegate {
             notConnected()
         }
     }
-    
+
+    // xkcd doesn't provide a comic #404.  I think it is a joke. (404 not found) :)
+    private func do404SpecificWork() {
+        comicNumLabel.text = "comic #: 404"
+        comicDateLabel.text = "00/00/0000"
+        comicTitleLabel.text = "404 Not Found :)"
+        comicImage.image = nil
+    }
     
     @IBAction private func savePressed(sender: AnyObject) {
         var comicImg: UIImage?
@@ -203,7 +233,6 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    
     @IBAction private func getSpecificComicPressed(sender: AnyObject) {
         let textBoxText: String = comicNumTextBox.text!
         let textBoxAsInt = Int(textBoxText)
@@ -211,6 +240,10 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         if isConnected() == true {
             if textBoxAsInt >= 1 && textBoxAsInt <= maximumComicNumber {
                 counter = textBoxAsInt!
+                if counter == 404 {
+                    do404SpecificWork()
+                    return;
+                }
                 URLtoRequestDataFrom = "http://xkcd.com/" + counter.description + "/info.0.json"
                 if shouldPlaySound == true {
                     playSound()
@@ -271,7 +304,6 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         } catch {
             print("Audio error!")
         }
-        
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle { // function to set the status bar light

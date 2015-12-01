@@ -159,11 +159,17 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="audioButton" destination="bbW-ft-ZmE" id="3fr-0y-4W1"/>
                         <outlet property="comicDateLabel" destination="duc-Kw-lXa" id="IN7-9c-WCq"/>
                         <outlet property="comicImage" destination="0hI-HC-sdz" id="Kle-iy-OJv"/>
                         <outlet property="comicNumLabel" destination="PjY-Ze-C7g" id="be6-4e-5QD"/>
                         <outlet property="comicNumTextBox" destination="c0O-zU-s3o" id="07x-34-fDV"/>
                         <outlet property="comicTitleLabel" destination="6mH-fV-sLn" id="Vcy-LS-Fsg"/>
+                        <outlet property="getComicNumButton" destination="vaQ-ff-LuE" id="aqU-jw-2UZ"/>
+                        <outlet property="leftArrow" destination="6a0-qr-b9f" id="xl1-o7-JnG"/>
+                        <outlet property="randomButton" destination="bJe-eu-azR" id="B9x-9J-aic"/>
+                        <outlet property="rightArrow" destination="T5a-lk-fjM" id="Vz3-wS-W0g"/>
+                        <outlet property="saveButton" destination="3BG-Xr-DpM" id="BRX-YD-XX8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

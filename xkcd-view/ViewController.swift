@@ -13,10 +13,10 @@ private var maximumComicNumber = 0
 private var counter = maximumComicNumber
 private var URLtoRequestDataFrom = ""
 private var comicTitle = ""
-private var imageURL: String = ""
+private var imageURL = ""
 private var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
 private var shouldPlaySound = true
-private var sound: AVAudioPlayer?
+private var soundEffect: AVAudioPlayer!
 
 final class ViewController: UIViewController, UITextFieldDelegate {
     
@@ -82,19 +82,19 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    private func displayNum () {
+    private func displayNum() {
         if let comicNum = dictOfCurrentComicInfo["num"] as? Int {
             comicNumLabel.text = "comic #: " + comicNum.description
         }
     }
     
-    private func displayTitle () {
+    private func displayTitle() {
         if let title = dictOfCurrentComicInfo["title"] as? String {
             comicTitleLabel.text = title
         }
     }
     
-    private func displayImage () {
+    private func displayImage() {
         if let img = dictOfCurrentComicInfo["img"] as? String {
             imageURL = img
             var comicImg: UIImage?
@@ -112,7 +112,7 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    private func displayDate () {
+    private func displayDate() {
         var day = ""; var month = ""; var year = "";
         if let dayNum = dictOfCurrentComicInfo["day"] as? String {
             if let monthNum = dictOfCurrentComicInfo["month"] as? String {
@@ -261,22 +261,17 @@ final class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func playSound() {
-        sound = setupAudioPlayerWithFile("button-31", type:"wav")
-        sound?.play()
-    }
-    
-    private func setupAudioPlayerWithFile(file: String, type: String) -> AVAudioPlayer? {
-        let path = NSBundle.mainBundle().pathForResource(file, ofType: type)
-        let url = NSURL.fileURLWithPath(path!)
-        var audioPlayer:AVAudioPlayer?
+        let path = NSBundle.mainBundle().pathForResource("button-31.wav", ofType:nil)!
+        let url = NSURL(fileURLWithPath: path)
         
         do {
-            audioPlayer = try AVAudioPlayer(contentsOfURL: url)
+            let sound = try AVAudioPlayer(contentsOfURL: url)
+            soundEffect = sound
+            sound.play()
         } catch {
-            print("Audio error")
+            print("Audio error!")
         }
         
-        return audioPlayer
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle { // function to set the status bar light

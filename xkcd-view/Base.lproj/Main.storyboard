@@ -62,13 +62,6 @@
                                     <action selector="savePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zqr-Ev-Bxn"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="comic title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6mH-fV-sLn">
-                                <rect key="frame" x="521" y="505" width="51" height="12"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-ft-ZmE">
                                 <rect key="frame" x="20" y="20" width="33" height="36"/>
                                 <animations/>
@@ -104,17 +97,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bJe-eu-azR">
-                                <rect key="frame" x="234" y="537" width="132" height="32"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <state key="normal" title="get random comic">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="randomPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xX7-5V-BT7"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00/00/0000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duc-Kw-lXa">
                                 <rect key="frame" x="521" y="490" width="59" height="12"/>
                                 <animations/>
@@ -126,6 +108,24 @@
                                 <rect key="frame" x="14" y="58" width="573" height="424"/>
                                 <animations/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bJe-eu-azR">
+                                <rect key="frame" x="234" y="537" width="132" height="32"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <state key="normal" title="get random comic">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="randomPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xX7-5V-BT7"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="comic title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6mH-fV-sLn">
+                                <rect key="frame" x="529" y="505" width="51" height="12"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -145,6 +145,7 @@
                             <constraint firstItem="bbW-ft-ZmE" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="OyE-Zs-6Kg"/>
                             <constraint firstItem="PjY-Ze-C7g" firstAttribute="top" secondItem="3BG-Xr-DpM" secondAttribute="bottom" constant="-3" id="R9W-m0-uFl"/>
                             <constraint firstItem="PjY-Ze-C7g" firstAttribute="top" secondItem="3BG-Xr-DpM" secondAttribute="bottom" constant="-3" id="U4d-p7-DwX"/>
+                            <constraint firstItem="6mH-fV-sLn" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="UZU-Nb-JaH"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0hI-HC-sdz" secondAttribute="trailing" constant="-7" id="UmL-nB-Ssa"/>
                             <constraint firstItem="T5a-lk-fjM" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="ZZq-DN-PUA"/>
                             <constraint firstItem="0hI-HC-sdz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-6" id="aDw-Mb-OCp"/>
@@ -153,7 +154,6 @@
                             <constraint firstItem="c0O-zU-s3o" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="jPN-Iy-c0E"/>
                             <constraint firstItem="bJe-eu-azR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="k4c-xU-4AS"/>
                             <constraint firstItem="PjY-Ze-C7g" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="m6N-Ml-6eN"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="6mH-fV-sLn" secondAttribute="trailing" constant="8" id="qtL-dX-UWP"/>
                             <constraint firstItem="0hI-HC-sdz" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="38" id="sOl-AE-82T"/>
                             <constraint firstItem="bbW-ft-ZmE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="zPs-fL-jI9"/>
                         </constraints>

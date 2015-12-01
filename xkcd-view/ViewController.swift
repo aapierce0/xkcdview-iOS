@@ -16,9 +16,9 @@ private var comicTitle = ""
 private var imageURL: String = ""
 private var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
 private var shouldPlaySound = true
-private var sound : AVAudioPlayer?
+private var sound: AVAudioPlayer?
 
-class ViewController: UIViewController, UITextFieldDelegate {
+final class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet private weak var comicNumTextBox: UITextField!
     @IBOutlet private weak var comicNumLabel: UILabel!

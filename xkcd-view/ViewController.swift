@@ -17,7 +17,6 @@ private var imageURL = ""
 private var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
 private var shouldPlaySound = true
 private var soundEffect: AVAudioPlayer!
-private var firstQueryPerformed = false
 
 final class ViewController: UIViewController, UITextFieldDelegate {
     
@@ -49,7 +48,6 @@ final class ViewController: UIViewController, UITextFieldDelegate {
                         self.displayTitle()
                         self.displayImage()
                         self.displayDate()
-                        firstQueryPerformed = true
                     }
                 }
             }

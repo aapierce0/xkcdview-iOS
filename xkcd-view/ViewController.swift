@@ -18,6 +18,8 @@ private var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
 private var shouldPlaySound = true
 private var soundEffect: AVAudioPlayer!
 
+// Terry Schmidts
+
 final class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet private weak var comicNumTextBox: UITextField!

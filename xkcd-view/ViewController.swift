@@ -142,7 +142,7 @@ final class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction private func previousPressed(sender: AnyObject) {
         if isConnected() == true {
             if counter >= 2 && counter <= maximumComicNumber {
-                counter--
+                counter -= 1
                 if counter == 404 {
                     do404SpecificWork()
                     return;
@@ -181,7 +181,7 @@ final class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction private func nextPressed(sender: AnyObject) {
         if isConnected() == true {
             if counter >= 1 && counter <= maximumComicNumber - 1 {
-                counter++
+                counter += 1
                 if counter == 404 {
                     do404SpecificWork()
                     return;

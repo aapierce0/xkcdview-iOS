@@ -14,7 +14,7 @@ private var counter = maximumComicNumber
 private var URLtoRequestDataFrom = ""
 private var comicTitle = ""
 private var imageURL = ""
-private var dictOfCurrentComicInfo: [String: AnyObject] = ["":-1]
+private var dictOfCurrentComicInfo: [String: Any] = ["":-1]
 private var shouldPlaySound = true
 private var soundEffect: AVAudioPlayer!
 
@@ -39,10 +39,10 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         self.comicNumTextBox.delegate = self
         let initialURL = "http://xkcd.com/info.0.json";
         if isConnected() == true {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                if let json = self.urlStringToJSON(initialURL) as? [String:AnyObject] {
+            DispatchQueue.global(qos: .default).async {
+                if let json = self.urlStringToJSON(url: initialURL) as? [String: Any] {
                     dictOfCurrentComicInfo = json
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         if let num = dictOfCurrentComicInfo["num"] as? Int {
                             maximumComicNumber = num
                         }
@@ -54,22 +54,22 @@ final class ViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         } else {
-           comicImage.image = UIImage(named: "noconnection.png")
-           leftArrow.userInteractionEnabled = false
-           randomButton.userInteractionEnabled = false
-           rightArrow.userInteractionEnabled = false
-           saveButton.userInteractionEnabled = false
-           getComicNumButton.userInteractionEnabled = false
-           audioButton.userInteractionEnabled = false
-           comicNumTextBox.userInteractionEnabled = false
+            comicImage.image = UIImage(named: "noconnection.png")
+            leftArrow.isUserInteractionEnabled = false
+            randomButton.isUserInteractionEnabled = false
+            rightArrow.isUserInteractionEnabled = false
+            saveButton.isUserInteractionEnabled = false
+            getComicNumButton.isUserInteractionEnabled = false
+            audioButton.isUserInteractionEnabled = false
+            comicNumTextBox.isUserInteractionEnabled = false
         }
     }
     
-    private func urlStringToJSON(url: String) -> AnyObject? {
-        if let address = NSURL(string: url) {
-            if let data = try? NSData(contentsOfURL: address, options: []) {
+    private func urlStringToJSON(url: String) -> Any? {
+        if let address = URL(string: url) {
+            if let data = try? Data(contentsOf: address, options: []) {
                 do {
-                    return try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
+                    return try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
                 } catch let myJSONError {
                     print(myJSONError)
                 }
@@ -80,10 +80,10 @@ final class ViewController: UIViewController, UITextFieldDelegate {
     
     private func displayAll() {
         if isConnected() == true {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                if let json = self.urlStringToJSON(URLtoRequestDataFrom) as? [String:AnyObject] {
+            DispatchQueue.global(qos: .default).async {
+                if let json = self.urlStringToJSON(url: URLtoRequestDataFrom) as? [String:Any] {
                     dictOfCurrentComicInfo = json
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         self.displayNum()
                         self.displayTitle()
                         self.displayImage()
@@ -113,15 +113,16 @@ final class ViewController: UIViewController, UITextFieldDelegate {
             imageURL = img
             var comicImg: UIImage?
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                if let url = NSURL(string: imageURL) {
-                    if let data = NSData(contentsOfURL: url) {
+            DispatchQueue.global(qos: .default).async {
+                if let url = URL(string: imageURL) {
+                    if let data = try? Data(contentsOf: url) {
                         comicImg = UIImage(data: data)!
                     }
                 }
                 
-                dispatch_async(dispatch_get_main_queue()) {
-                    UIView.transitionWithView(self.comicImage, duration: 1, options: .TransitionCrossDissolve, animations: { self.comicImage.image = comicImg }, completion: nil)}
+                DispatchQueue.main.async {
+                    UIView.transition(with: self.comicImage, duration: 1, options: .transitionCrossDissolve, animations: { self.comicImage.image = comicImg }, completion: nil)
+                }
             }
         }
     }
@@ -141,7 +142,7 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         comicDateLabel.text = month + "/" + day + "/" + year
     }
     
-    @IBAction private func previousPressed(sender: AnyObject) {
+    @IBAction private func previousPressed(_ sender: AnyObject) {
         if isConnected() == true {
             if counter >= 2 && counter <= maximumComicNumber {
                 counter -= 1
@@ -162,9 +163,9 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction private func randomPressed(sender: AnyObject) {
+    @IBAction private func randomPressed(_ sender: AnyObject) {
         if isConnected() == true {
-            let randomNum = randomInt(1, max: maximumComicNumber)
+            let randomNum = randomInt(min: 1, max: maximumComicNumber)
             counter = randomNum
             if counter == 404 {
                 do404SpecificWork()
@@ -180,7 +181,7 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction private func nextPressed(sender: AnyObject) {
+    @IBAction private func nextPressed(_ sender: AnyObject) {
         if isConnected() == true {
             if counter >= 1 && counter <= maximumComicNumber - 1 {
                 counter += 1
@@ -209,16 +210,16 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         comicImage.image = nil
     }
     
-    @IBAction private func savePressed(sender: AnyObject) {
+    @IBAction private func savePressed(_ sender: AnyObject) {
         var comicImg: UIImage?
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            if let url = NSURL(string: imageURL) {
-                if let data = NSData(contentsOfURL: url) {
+        DispatchQueue.global(qos: .default).async {
+            if let url = URL(string: imageURL) {
+                if let data = try? Data(contentsOf: url) {
                     comicImg = UIImage(data: data)
                 }
             }
 
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 if let com = comicImg {
                     UIImageWriteToSavedPhotosAlbum(com, nil, nil, nil)
                 }
@@ -226,19 +227,19 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction private func audioToggled(sender: AnyObject) {
+    @IBAction private func audioToggled(_ sender: AnyObject) {
         shouldPlaySound = !shouldPlaySound
-        let alert = UIAlertController(title: "Audio toggled", message: "", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default, handler: { alertAction in }))
-        self.presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Audio toggled", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { _ in }))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    @IBAction private func getSpecificComicPressed(sender: AnyObject) {
+    @IBAction private func getSpecificComicPressed(_ sender: AnyObject) {
         let textBoxText: String = comicNumTextBox.text!
         let textBoxAsInt = Int(textBoxText)
         
         if isConnected() == true {
-            if textBoxAsInt >= 1 && textBoxAsInt <= maximumComicNumber {
+            if (textBoxAsInt ?? -1) >= 1 && (textBoxAsInt ?? -1) <= maximumComicNumber {
                 counter = textBoxAsInt!
                 if counter == 404 {
                     do404SpecificWork()
@@ -257,13 +258,16 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Copied from: https://stackoverflow.com/a/39782859/1422794
     private func isConnected() -> Bool {
         var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
         zeroAddress.sin_family = sa_family_t(AF_INET)
         
-        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-            SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, UnsafePointer($0))
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
         }
         
         var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
@@ -271,22 +275,31 @@ final class ViewController: UIViewController, UITextFieldDelegate {
             return false
         }
         
-        let isReachable = flags == .Reachable
-        let needsConnection = flags == .ConnectionRequired
+        /* Only Working for WIFI
+         let isReachable = flags == .reachable
+         let needsConnection = flags == .connectionRequired
+         
+         return isReachable && !needsConnection
+         */
         
-        return isReachable && !needsConnection
+        // Working for Cellular and WIFI
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        let ret = (isReachable && !needsConnection)
+        
+        return ret
     }
     
     private func impossibleRequest() {
-        let alert = UIAlertController(title: "Invalid comic number", message: "Request is not in bounds: 1 - \(maximumComicNumber)", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default, handler: { alertAction in }))
-        self.presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Invalid comic number", message: "Request is not in bounds: 1 - \(maximumComicNumber)", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { _ in }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func notConnected() {
-        let alert = UIAlertController(title: "Network unavailable", message: "You do not currently have a connection.", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default, handler: { alertAction in }))
-        self.presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Network unavailable", message: "You do not currently have a connection.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { alertAction in }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func randomInt(min: Int, max:Int) -> Int {
@@ -294,11 +307,11 @@ final class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func playSound() {
-        let path = NSBundle.mainBundle().pathForResource("button-31.wav", ofType:nil)!
-        let url = NSURL(fileURLWithPath: path)
+        let path = Bundle.main.path(forResource: "button-31.wav", ofType:nil)!
+        let url = URL(fileURLWithPath: path)
         
         do {
-            let sound = try AVAudioPlayer(contentsOfURL: url)
+            let sound = try AVAudioPlayer(contentsOf: url)
             soundEffect = sound
             sound.play()
         } catch {
@@ -306,8 +319,9 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle { // function to set the status bar light
-        return UIStatusBarStyle.LightContent
+    // property to set the status bar light
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     func textFieldShouldReturn(textBox: UITextField) -> Bool { // function called when user hits return on keyboard
@@ -315,7 +329,7 @@ final class ViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) { // function called when user touches screen outside of keyboard
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { // function called when user touches screen outside of keyboard
         self.view.endEditing(true) // resigns the keyboard after touching outside of keyboard
     }
     
